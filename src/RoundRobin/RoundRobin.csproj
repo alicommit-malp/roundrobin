@@ -4,13 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <License>MIT</License>
     <Description>A simple implementation of round robin in c# with circular linked list</Description>
     <Copyright>None</Copyright>
     <PackageProjectUrl>https://github.com/alicommit-malp/roundrobin</PackageProjectUrl>
     <RepositoryUrl>https://github.com/alicommit-malp/roundrobin</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>LinkedList , RoundRobin, Circular Linked List</PackageTags>
+    <Title>Round Robin thread safe algorithm with linked list </Title>
+    <license>MIT</license>
   </PropertyGroup>
 
 </Project>
