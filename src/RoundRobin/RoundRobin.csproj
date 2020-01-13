@@ -12,6 +12,7 @@
     <PackageTags>LinkedList , RoundRobin, Circular Linked List</PackageTags>
     <Title>Round Robin thread safe algorithm with linked list </Title>
     <license>MIT</license>
+    <PackageVersion>2.0.0</PackageVersion>
   </PropertyGroup>
 
 </Project>

@@ -22,8 +22,8 @@ namespace RoundRobin.Test
         {
             var rb = new RoundRobinList<int>(_data);
 
-            rb.ResetAllPriorities(1);
-            rb.DecreasePriority(1, 2);
+            rb.ResetAllWeights(1);
+            rb.DecreaseWeight(1, 2);
 
             var result = new List<int>();
             for (var i = 0; i < 10; i++)
@@ -46,7 +46,7 @@ namespace RoundRobin.Test
         {
             var rb = new RoundRobinList<int>(_data);
 
-            rb.IncreasePriority(1, 2);
+            rb.IncreaseWeight(1, 2);
 
             var result = new List<int>();
             for (var i = 0; i < 10; i++)

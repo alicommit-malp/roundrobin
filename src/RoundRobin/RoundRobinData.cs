@@ -6,7 +6,7 @@ namespace RoundRobin
     internal partial class RoundRobinData<T>
     {
         public T Item { get; set; }
-        public int Priority { get; set; }
+        public int Weight { get; set; }
         public int Counter { get; set; }
     }
 
@@ -15,14 +15,14 @@ namespace RoundRobin
         public bool MustMoveToNext()
         {
             ++Counter;
-            return Counter > Priority;
+            return Counter > Weight;
         }
 
         public static IEnumerable<RoundRobinData<T>> ToRoundRobinData(IEnumerable<T> list)
         {
             var result = list
                 .Select(item => new RoundRobinData<T>()
-                    {Item = item, Counter = Constants.CounterDefaultValue, Priority = Constants.PriorityDefaultValue,})
+                    {Item = item, Counter = Constants.CounterDefaultValue, Weight = Constants.WeightDefaultValue,})
                 .ToList();
             return result;
         }
