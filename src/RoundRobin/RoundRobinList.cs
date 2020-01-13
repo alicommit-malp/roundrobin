@@ -59,7 +59,7 @@ namespace RoundRobin
 
             lock (_lockResetWeight)
             {
-                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Item.Equals(item)))
+                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(item)))
                 {
                     roundRobinData.Weight = Constants.WeightDefaultValue;
                 }
@@ -69,18 +69,18 @@ namespace RoundRobin
         /// <summary>
         /// Decrease the value of the weight associating with the Round Robin's element 
         /// </summary>
-        /// <param name="item">The round robin element</param>
+        /// <param name="element">The round robin element</param>
         /// <param name="amount">The amount of the change , default value is 1</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public void DecreaseWeight(T item, int amount = 1)
+        public void DecreaseWeight(T element, int amount = 1)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (element == null) throw new ArgumentNullException(nameof(element));
             if (amount < 1) throw new ArgumentException($"{nameof(amount)} must be greater than 1");
 
             lock (_lockDecreaseWeight)
             {
-                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Item.Equals(item)))
+                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(element)))
                 {
                     var futureWeight = roundRobinData.Weight - amount;
                     roundRobinData.Weight = futureWeight < Constants.WeightDefaultValue
@@ -93,18 +93,18 @@ namespace RoundRobin
         /// <summary>
         /// Increase the value of the weight associating with the Round Robin's element 
         /// </summary>
-        /// <param name="item">The round robin element</param>
+        /// <param name="element">The round robin element</param>
         /// <param name="amount">The amount of the change , default value is 1</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public void IncreaseWeight(T item, int amount = 1)
+        public void IncreaseWeight(T element, int amount = 1)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (element == null) throw new ArgumentNullException(nameof(element));
             if (amount < 1) throw new ArgumentException("Amount must be greater than 1");
 
             lock (_lockIncreaseWeight)
             {
-                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Item.Equals(item)))
+                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(element)))
                 {
                     roundRobinData.Weight += amount;
                 }
@@ -122,13 +122,13 @@ namespace RoundRobin
                 if (_current == null) _current = _linkedList.First;
                 else
                 {
-                    if (!_current.Value.MustMoveToNext()) return _current.Value.Item;
+                    if (!_current.Value.MustMoveToNext()) return _current.Value.Element;
 
                     _current.Value.Counter = Constants.CounterDefaultValue;
                     _current = _current.NextOrFirst();
                 }
 
-                return _current.Value.Item;
+                return _current.Value.Element;
             }
         }
 

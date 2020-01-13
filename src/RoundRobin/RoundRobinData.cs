@@ -5,7 +5,7 @@ namespace RoundRobin
 {
     internal partial class RoundRobinData<T>
     {
-        public T Item { get; set; }
+        public T Element { get; set; }
         public int Weight { get; set; }
         public int Counter { get; set; }
     }
@@ -22,7 +22,7 @@ namespace RoundRobin
         {
             var result = list
                 .Select(item => new RoundRobinData<T>()
-                    {Item = item, Counter = Constants.CounterDefaultValue, Weight = Constants.WeightDefaultValue,})
+                    {Element = item, Counter = Constants.CounterDefaultValue, Weight = Constants.WeightDefaultValue,})
                 .ToList();
             return result;
         }

@@ -46,7 +46,7 @@ namespace RoundRobin.Test
         {
             var rb = new RoundRobinList<int>(_data);
 
-            rb.IncreaseWeight(1, 2);
+            rb.IncreaseWeight(element:1,amount: 2);
 
             var result = new List<int>();
             for (var i = 0; i < 10; i++)

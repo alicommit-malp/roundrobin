@@ -34,4 +34,25 @@ for (var i = 0; i < 8; i++)
 
 ```
 
+Also you can increase/decrease the weights, by doing so you will be able to increase/decrease the priority of an element in the Round Robin list 
+
+```c#
+var roundRobinList = new RoundRobinList<int>(
+    new List<int>{
+        1,2,3,4,5
+    }
+);
+
+//the weight of the element 1 will be increase by 2 units
+roundRobinList.IncreaseWeight(element:1, amount:2);
+
+for (var i = 0; i < 10; i++)
+{
+    Write($"{roundRobinList.Next()},");
+}
+
+//result
+//1,1,1,2,3,4,5,1,1,1
+```
+
 Enjoy coding :)

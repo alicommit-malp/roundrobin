@@ -43,7 +43,7 @@ namespace RoundRobin.Test
                 1, 2, 2, 3, 3, 4, 4, 5, 5, 1
             };
 
-            // Assert.AreEqual(mustBe, result);
+            Assert.AreEqual(mustBe, result);
         }
 
         [Test]
