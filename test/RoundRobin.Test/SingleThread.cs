@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework;
 
 namespace RoundRobin.Test
@@ -46,7 +45,7 @@ namespace RoundRobin.Test
         {
             var rb = new RoundRobinList<int>(_data);
 
-            rb.IncreaseWeight(element:1,amount: 2);
+            rb.IncreaseWeight(element: 1, amount: 2);
 
             var result = new List<int>();
             for (var i = 0; i < 10; i++)

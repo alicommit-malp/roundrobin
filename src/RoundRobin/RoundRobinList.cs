@@ -7,13 +7,7 @@ namespace RoundRobin
     public class RoundRobinList<T>
     {
         private readonly LinkedList<RoundRobinData<T>> _linkedList;
-        private readonly object _lockNext = new object();
-        private readonly object _lockNexts = new object();
-        private readonly object _lockIncreaseWeight = new object();
-        private readonly object _lockDecreaseWeight = new object();
-        private readonly object _lockResetAllWeights = new object();
-        private readonly object _lockReset = new object();
-        private readonly object _lockResetWeight = new object();
+        private readonly object _lock = new object();
         private LinkedListNode<RoundRobinData<T>> _current;
 
         public RoundRobinList(IEnumerable<T> list)
@@ -27,7 +21,7 @@ namespace RoundRobin
         /// </summary>
         public void Reset()
         {
-            lock (_lockReset)
+            lock (_lock)
             {
                 _current = _linkedList.First;
             }
@@ -39,7 +33,7 @@ namespace RoundRobin
         /// <param name="value">if not passed the default value will be applied</param>
         public void ResetAllWeights(int value = Constants.WeightDefaultValue)
         {
-            lock (_lockResetAllWeights)
+            lock (_lock)
             {
                 foreach (var roundRobinData in _linkedList)
                 {
@@ -57,7 +51,7 @@ namespace RoundRobin
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
-            lock (_lockResetWeight)
+            lock (_lock)
             {
                 foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(item)))
                 {
@@ -78,7 +72,7 @@ namespace RoundRobin
             if (element == null) throw new ArgumentNullException(nameof(element));
             if (amount < 1) throw new ArgumentException($"{nameof(amount)} must be greater than 1");
 
-            lock (_lockDecreaseWeight)
+            lock (_lock)
             {
                 foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(element)))
                 {
@@ -102,7 +96,7 @@ namespace RoundRobin
             if (element == null) throw new ArgumentNullException(nameof(element));
             if (amount < 1) throw new ArgumentException("Amount must be greater than 1");
 
-            lock (_lockIncreaseWeight)
+            lock (_lock)
             {
                 foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(element)))
                 {
@@ -117,7 +111,7 @@ namespace RoundRobin
         /// <returns></returns>
         public T Next()
         {
-            lock (_lockNext)
+            lock (_lock)
             {
                 if (_current == null) _current = _linkedList.First;
                 else
@@ -142,7 +136,7 @@ namespace RoundRobin
             if(count<1)throw new ArgumentException($"{nameof(count)} must be greater than 1");
             
             var result = new List<T>();
-            lock (_lockNexts)
+            lock (_lock)
             {
                 for (var i = 0; i < count; i++)
                 {

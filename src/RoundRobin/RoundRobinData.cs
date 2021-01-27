@@ -5,7 +5,7 @@ namespace RoundRobin
 {
     internal partial class RoundRobinData<T>
     {
-        public T Element { get; set; }
+        public T Element { get; private set; }
         public int Weight { get; set; }
         public int Counter { get; set; }
     }

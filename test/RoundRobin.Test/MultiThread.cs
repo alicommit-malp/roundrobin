@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +30,7 @@ namespace RoundRobin.Test
             var result = new List<int>();
             for (var i = 0; i < 10; i++)
             {
-                tasks[i] = Task.Factory.StartNew(() => { result.Add(rb.Next()); });
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
             }
 
             await Task.WhenAll(tasks);
@@ -57,7 +56,7 @@ namespace RoundRobin.Test
             var tasks = new Task[10];
             for (var i = 0; i < 10; i++)
             {
-                tasks[i] = Task.Factory.StartNew(() => { result.Add(rb.Next()); });
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
             }
 
             await Task.WhenAll(tasks);
@@ -81,7 +80,7 @@ namespace RoundRobin.Test
             var tasks = new Task[10];
             for (var i = 0; i < 10; i++)
             {
-                tasks[i] = Task.Factory.StartNew(() => { result.Add(rb.Next()); });
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
             }
 
             await Task.WhenAll(tasks);
@@ -104,13 +103,10 @@ namespace RoundRobin.Test
             var tasks = new Task[2];
             for (var i = 0; i < 2; i++)
             {
-                tasks[i] = Task.Factory.StartNew(() =>
+                tasks[i] = Task.Run(() =>
                 {
                     var taskResult = rb.Nexts(5);
-                    foreach (var res in taskResult)
-                    {
-                        result.Add(res);
-                    }
+                    result.AddRange(taskResult);
                 });
             }
 
