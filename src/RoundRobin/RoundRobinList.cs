@@ -28,6 +28,22 @@ namespace RoundRobin
         }
 
         /// <summary>
+        /// Reset the Round Robin to point to <typeparamref name="T"/>
+        /// ex: {1,2,3,4,5} then the reset to 3 then when you call the next 4 will be the first value which will be yield 
+        /// </summary>
+        public void ResetTo(T element)
+        {
+            lock (_lock)
+            {
+                foreach (var roundRobinData in _linkedList.Where(roundRobinData =>
+                    roundRobinData.Element.Equals(element)))
+                {
+                    _current = _linkedList.Find(roundRobinData);
+                }
+            }
+        }
+
+        /// <summary>
         /// Reset all the weights to a value 
         /// </summary>
         /// <param name="value">if not passed the default value will be applied</param>
@@ -74,7 +90,8 @@ namespace RoundRobin
 
             lock (_lock)
             {
-                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(element)))
+                foreach (var roundRobinData in _linkedList.Where(roundRobinData =>
+                    roundRobinData.Element.Equals(element)))
                 {
                     var futureWeight = roundRobinData.Weight - amount;
                     roundRobinData.Weight = futureWeight < Constants.WeightDefaultValue
@@ -98,7 +115,8 @@ namespace RoundRobin
 
             lock (_lock)
             {
-                foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(element)))
+                foreach (var roundRobinData in _linkedList.Where(roundRobinData =>
+                    roundRobinData.Element.Equals(element)))
                 {
                     roundRobinData.Weight += amount;
                 }
@@ -133,8 +151,8 @@ namespace RoundRobin
         /// <returns></returns>
         public IEnumerable<T> Nexts(int count)
         {
-            if(count<1)throw new ArgumentException($"{nameof(count)} must be greater than 1");
-            
+            if (count < 1) throw new ArgumentException($"{nameof(count)} must be greater than 1");
+
             var result = new List<T>();
             lock (_lock)
             {

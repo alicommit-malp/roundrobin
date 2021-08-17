@@ -62,6 +62,28 @@ namespace RoundRobin.Test
 
             Assert.AreEqual(mustBe, result);
         }
+        
+        [Test]
+        public void RoundRobin_StartTo()
+        {
+            var rb = new RoundRobinList<int>(_data);
+            rb.ResetTo(4);
+
+            var result = new List<int>();
+            for (var i = 0; i < 10; i++)
+            {
+                result.Add(rb.Next());
+            }
+
+            result.ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                5, 1, 2, 3, 4, 5,1,2,3,4
+            };
+
+            Assert.AreEqual(result, mustBe);
+        }
 
         [Test]
         public void RoundRobin()

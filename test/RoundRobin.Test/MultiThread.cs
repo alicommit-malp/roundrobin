@@ -71,6 +71,31 @@ namespace RoundRobin.Test
             Assert.AreEqual(mustBe, result);
         }
 
+        
+        [Test]
+        public async Task RoundRobin_StartTo()
+        {
+            var rb = new RoundRobinList<int>(_data);
+            rb.ResetTo(4);
+
+            var result = new List<int>();
+            var tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+            result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                5, 1, 2, 3, 4, 5,1,2,3,4
+            };
+
+            Assert.AreEqual(result, mustBe);
+        }
+        
         [Test]
         public async Task RoundRobin()
         {
