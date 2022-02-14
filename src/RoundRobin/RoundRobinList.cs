@@ -131,6 +131,9 @@ namespace RoundRobin
         {
             lock (_lock)
             {
+                if (_linkedList.Count == 0)
+                    throw new InvalidOperationException("List is empty.");
+
                 if (_current == null) _current = _linkedList.First;
                 else
                 {
