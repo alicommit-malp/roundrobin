@@ -12,7 +12,7 @@
     <PackageTags>LinkedList , RoundRobin, Circular Linked List</PackageTags>
     <Title>Round Robin thread safe algorithm with linked list </Title>
     <license>MIT</license>
-    <PackageVersion>2.0.1</PackageVersion>
+    <PackageVersion>2.1.1</PackageVersion>
     <LicenseUrl>https://raw.githubusercontent.com/alicommit-malp/roundrobin/master/LICENSE</LicenseUrl>
   </PropertyGroup>
 
