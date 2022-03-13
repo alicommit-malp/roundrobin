@@ -44,6 +44,30 @@ namespace RoundRobin.Test
 
             Assert.AreEqual(mustBe, result);
         }
+        
+        [Test]
+        public async Task InitialiseWithArrayOfWeights()
+        {
+            var rb = new RoundRobinList<int>(_data,new []{0,1,0,0,0});
+
+            var result = new List<int>();
+            var tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+
+            result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 2, 2, 3 ,4 ,5 ,1 ,2 ,2 ,3 
+            };
+
+            Assert.AreEqual(mustBe, result);
+        }
 
         [Test]
         public async Task IncreasePriority()

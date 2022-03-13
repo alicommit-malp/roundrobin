@@ -18,11 +18,18 @@ namespace RoundRobin
             return Counter > Weight;
         }
 
-        public static IEnumerable<RoundRobinData<T>> ToRoundRobinData(IEnumerable<T> list)
+        /// <summary>
+        /// Sets lists <see cref="RoundRobinData{T}"/> with <see cref="weights"/>
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="weights">An integer array of the weights</param>
+        /// <returns>Collection of <see cref="RoundRobinData{T}"/></returns>
+        public static IEnumerable<RoundRobinData<T>> ToRoundRobinData(IEnumerable<T> list,int[] weights=null)
         {
             var result = list
-                .Select(item => new RoundRobinData<T>()
-                    {Element = item, Counter = Constants.CounterDefaultValue, Weight = Constants.WeightDefaultValue,})
+                .Select((item,index) => new RoundRobinData<T>()
+                    {Element = item, Counter = Constants.CounterDefaultValue, 
+                        Weight = weights!=null? weights[index]:Constants.WeightDefaultValue,})
                 .ToList();
             return result;
         }

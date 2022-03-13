@@ -10,11 +10,17 @@ namespace RoundRobin
         private readonly object _lock = new object();
         private LinkedListNode<RoundRobinData<T>> _current;
 
-        public RoundRobinList(IEnumerable<T> list)
+        /// <summary>
+        /// Construct the RoundRobin 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="weights">An array of weights</param>
+        /// <remarks><see cref="weights"/>'s lenght must be equal to the <see cref="list"/>'s count</remarks>
+        public RoundRobinList(IEnumerable<T> list,int[] weights=null)
         {
-            _linkedList = new LinkedList<RoundRobinData<T>>(RoundRobinData<T>.ToRoundRobinData(list));
+            _linkedList = new LinkedList<RoundRobinData<T>>(RoundRobinData<T>.ToRoundRobinData(list,weights));
         }
-
+        
         /// <summary>
         /// Reset the Round Robin to point to the first object
         /// ex: {1,2,3,4,5} then the first one is {1}

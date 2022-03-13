@@ -64,6 +64,27 @@ namespace RoundRobin.Test
         }
         
         [Test]
+        public void InitialiseWithArrayOfWeights()
+        {
+            var rb = new RoundRobinList<int>(_data,new []{0,1,0,0,0});
+
+            var result = new List<int>();
+            for (var i = 0; i < 10; i++)
+            {
+                result.Add(rb.Next());
+            }
+
+            result.ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 2, 2, 3 ,4 ,5 ,1 ,2 ,2 ,3 
+            };
+
+            Assert.AreEqual(mustBe, result);
+        }
+        
+        [Test]
         public void RoundRobin_StartTo()
         {
             var rb = new RoundRobinList<int>(_data);

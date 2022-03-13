@@ -55,4 +55,24 @@ for (var i = 0; i < 10; i++)
 //1,1,1,2,3,4,5,1,1,1
 ```
 
+Also you can set the weights during the initialization
+
+```c#
+var roundRobinList = new RoundRobinList<int>(
+    new List<int>{
+        1,2,3,4,5
+    },new int[]{0,1,0,0,0}
+);
+
+for (var i = 0; i < 10; i++)
+{
+    Write($"{roundRobinList.Next()},");
+}
+
+//result
+//1,2,2,3,4,5,1,2,2,3
+```
+
+
+
 Enjoy coding :)
