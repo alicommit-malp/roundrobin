@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace RoundRobin
@@ -15,7 +16,7 @@ namespace RoundRobin
         /// </summary>
         /// <param name="list"></param>
         /// <param name="weights">An array of weights</param>
-        /// <remarks><see cref="weights"/>'s lenght must be equal to the <see cref="list"/>'s count</remarks>
+        /// <remarks><see cref="weights"/>'s length must be equal to the <see cref="list"/>'s count</remarks>
         public RoundRobinList(IEnumerable<T> list,int[] weights=null)
         {
             _linkedList = new LinkedList<RoundRobinData<T>>(RoundRobinData<T>.ToRoundRobinData(list,weights));
@@ -149,6 +150,7 @@ namespace RoundRobin
                     _current = _current.NextOrFirst();
                 }
 
+                Debug.Assert(_current != null, nameof(_current) + " != null");
                 return _current.Value.Element;
             }
         }

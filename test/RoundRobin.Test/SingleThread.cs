@@ -10,10 +10,7 @@ namespace RoundRobin.Test
         [SetUp]
         public void Setup()
         {
-            _data = new List<int>()
-            {
-                1, 2, 3, 4, 5
-            };
+            _data = [1, 2, 3, 4, 5];
         }
 
         [Test]
@@ -37,7 +34,7 @@ namespace RoundRobin.Test
                 1, 2, 2, 3, 3, 4, 4, 5, 5, 1
             };
 
-            Assert.AreEqual(mustBe, result);
+            Assert.That(mustBe,Is.EqualTo(result));
         }
 
         [Test]
@@ -60,7 +57,7 @@ namespace RoundRobin.Test
                 1, 1, 1, 2, 3, 4, 5, 1, 1, 1
             };
 
-            Assert.AreEqual(mustBe, result);
+            Assert.That(mustBe,Is.EqualTo(result));
         }
         
         [Test]
@@ -81,7 +78,7 @@ namespace RoundRobin.Test
                 1, 2, 2, 3 ,4 ,5 ,1 ,2 ,2 ,3 
             };
 
-            Assert.AreEqual(mustBe, result);
+            Assert.That(mustBe,Is.EqualTo(result));
         }
         
         [Test]
@@ -103,7 +100,7 @@ namespace RoundRobin.Test
                 5, 1, 2, 3, 4, 5,1,2,3,4
             };
 
-            Assert.AreEqual(result, mustBe);
+            Assert.That(result,Is.EqualTo(mustBe));
         }
 
         [Test]
@@ -124,7 +121,7 @@ namespace RoundRobin.Test
                 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
             };
 
-            Assert.AreEqual(result, mustBe);
+            Assert.That(result,Is.EqualTo(mustBe));
         }
 
         [Test]
@@ -137,10 +134,10 @@ namespace RoundRobin.Test
             result.AddRange(rb.Nexts(5));
             result.ForEach(z => { TestContext.Write($"{z},"); });
 
-            Assert.AreEqual(new List<int>()
+            Assert.That(new List<int>()
             {
                 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
-            }, result);
+            },Is.EqualTo(result));
         }
     }
 }

@@ -6,12 +6,12 @@ namespace RoundRobin
     {
         public static LinkedListNode<T> NextOrFirst<T>(this LinkedListNode<T> current)
         {
-            return current.Next ?? current.List.First;
+            return current.Next ?? current.List?.First;
         }
 
         public static LinkedListNode<T> PreviousOrLast<T>(this LinkedListNode<T> current)
         {
-            return current.Previous ?? current.List.Last;
+            return current.Previous ?? current.List?.Last;
         }
     }
 }
