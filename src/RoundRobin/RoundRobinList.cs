@@ -11,7 +11,7 @@ namespace RoundRobin
     public class RoundRobinList<T>
     {
         private readonly LinkedList<RoundRobinData<T>> _linkedList;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private LinkedListNode<RoundRobinData<T>> _current;
 
         /// <summary>
