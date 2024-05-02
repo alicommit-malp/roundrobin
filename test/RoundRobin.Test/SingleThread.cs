@@ -12,7 +12,7 @@ namespace RoundRobin.Test
         {
             _data = [1, 2, 3, 4, 5];
         }
-
+        
         [Test]
         public void DecreasePriority()
         {
@@ -61,6 +61,41 @@ namespace RoundRobin.Test
         }
         
         [Test]
+        public void ResetPriority()
+        {
+            var rb = new RoundRobinList<int>(_data);
+
+            rb.IncreaseWeight(element: 1, amount: 2);
+
+            var result = new List<int>();
+            for (var i = 0; i < 10; i++)
+            {
+                result.Add(rb.Next());
+            }
+
+            result.ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 1, 1, 2, 3, 4, 5, 1, 1, 1
+            };
+
+            Assert.That(mustBe,Is.EqualTo(result));
+            
+            rb.ResetWeight(1,1);
+            rb.Reset();
+            
+             result = [];
+            for (var i = 0; i < 10; i++)
+            {
+                result.Add(rb.Next());
+            }
+
+            mustBe = [1, 1, 2, 3, 4, 5, 1, 1, 2, 3];
+
+            Assert.That(mustBe,Is.EqualTo(result));
+        }
+        [Test]
         public void InitialiseWithArrayOfWeights()
         {
             var rb = new RoundRobinList<int>(_data,new []{0,1,0,0,0});
@@ -103,6 +138,38 @@ namespace RoundRobin.Test
             Assert.That(result,Is.EqualTo(mustBe));
         }
 
+        [Test]
+        public void RoundRobin_StartToReset()
+        {
+            var rb = new RoundRobinList<int>(_data);
+            rb.ResetTo(4);
+
+            var result = new List<int>();
+            for (var i = 0; i < 10; i++)
+            {
+                result.Add(rb.Next());
+            }
+
+            result.ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                5, 1, 2, 3, 4, 5,1,2,3,4
+            };
+
+            Assert.That(result,Is.EqualTo(mustBe));
+            
+            rb.Reset();
+            result = [];
+            for (var i = 0; i < 10; i++)
+            {
+                result.Add(rb.Next());
+            }
+            mustBe = [1, 2, 3, 4, 5, 1, 2, 3, 4,5];
+
+            Assert.That(result,Is.EqualTo(mustBe));
+            
+        }
         [Test]
         public void RoundRobin()
         {
