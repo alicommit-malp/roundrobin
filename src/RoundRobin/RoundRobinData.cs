@@ -14,7 +14,7 @@ namespace RoundRobin
         /// Represents a data element used in the RoundRobinList class.
         /// </summary>
         /// <typeparam name="T">The type of the element.</typeparam>
-        public T Element { get; private set; }
+        public T Element { get; set; }
 
         /// <summary>
         /// Gets or sets the weight of the RoundRobinData element.

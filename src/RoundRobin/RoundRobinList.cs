@@ -38,10 +38,93 @@ namespace RoundRobin
                         roundRobinData.Counter = 0;
                     }
                 }
+
                 _current = null;
             }
         }
 
+        /// <summary>
+        /// Adds a new element at the last position in the Round Robin list.
+        /// </summary>
+        /// <param name="newElement">The element to be added to the list.</param>
+        /// <param name="weight">The weight associated with the new element. The default value is Constants.WeightDefaultValue.</param>
+        public void AddElementAtLast(T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddLast(new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds a new element to the beginning of the Round Robin list.
+        /// </summary>
+        /// <param name="newElement">The new element to add.</param>
+        /// <param name="weight">The weight of the new element. The default value is Constants.WeightDefaultValue.</param>
+        public void AddElementAtFirst(T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddFirst(new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// Adds a new element before the specified element in the Round Robin list.
+        /// </summary>
+        /// <param name="beforeElement">The element before which the new element will be added.</param>
+        /// <param name="newElement">The new element to be added.</param>
+        /// <param name="weight">The weight of the new element. Defaults to Constants.WeightDefaultValue if not provided.</param>
+        /// <remarks>
+        /// This method adds the new element before the specified element in the Round Robin list.
+        /// It locks the list using a lock object to ensure thread safety.
+        /// If the specified element is not found in the list, an InvalidOperationException is thrown.
+        /// </remarks>
+        public void AddElementBefore(T beforeElement,T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddBefore(_linkedList.Find(_linkedList.First(z=>
+                    z.Element.Equals(beforeElement))) ?? throw new InvalidOperationException(),new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds a new element after a specified element in the RoundRobinList.
+        /// </summary>
+        /// <param name="afterElement">The element after which the new element should be added.</param>
+        /// <param name="newElement">The new element to be added.</param>
+        /// <param name="weight">The weight of the new element. The default value is Constants.WeightDefaultValue.</param>
+        public void AddElementAfter(T afterElement, T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddAfter(_linkedList.Find(_linkedList.First(z =>
+                    z.Element.Equals(afterElement))) ?? throw new InvalidOperationException(), new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+        
         /// <summary>
         /// Reset the Round Robin to point to a specific element.
         /// </summary>
@@ -86,7 +169,7 @@ namespace RoundRobin
                 }
             }
         }
-        
+
         /// <summary>
         /// Decrease the value of the weight associating with the Round Robin's element
         /// </summary>

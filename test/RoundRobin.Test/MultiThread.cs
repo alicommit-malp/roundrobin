@@ -40,13 +40,13 @@ namespace RoundRobin.Test
                 1, 2, 2, 3, 3, 4, 4, 5, 5, 1
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
-        
+
         [Test]
         public async Task InitialiseWithArrayOfWeights()
         {
-            var rb = new RoundRobinList<int>(_data,new []{0,1,0,0,0});
+            var rb = new RoundRobinList<int>(_data, new[] { 0, 1, 0, 0, 0 });
 
             var result = new ConcurrentBag<int>();
             var tasks = new Task[10];
@@ -61,10 +61,10 @@ namespace RoundRobin.Test
 
             var mustBe = new List<int>()
             {
-                1, 2, 2, 3 ,4 ,5 ,1 ,2 ,2 ,3 
+                1, 2, 2, 3, 4, 5, 1, 2, 2, 3
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
 
         [Test]
@@ -90,12 +90,12 @@ namespace RoundRobin.Test
                 1, 1, 1, 2, 3, 4, 5, 1, 1, 1
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
-            
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+
             // resetting 
-            
+
             rb.Reset();
-            rb.ResetWeight(1,1);
+            rb.ResetWeight(1, 1);
             result.Clear();
             for (var i = 0; i < 10; i++)
             {
@@ -106,10 +106,11 @@ namespace RoundRobin.Test
 
             result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
 
-            mustBe = [1, 1, 2, 3, 4, 5, 1, 1, 2,3];
+            mustBe = [1, 1, 2, 3, 4, 5, 1, 1, 2, 3];
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
+
         [Test]
         public async Task IncreasePriority()
         {
@@ -133,7 +134,7 @@ namespace RoundRobin.Test
                 1, 1, 1, 2, 3, 4, 5, 1, 1, 1
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
 
         [Test]
@@ -154,24 +155,25 @@ namespace RoundRobin.Test
 
             var mustBe = new List<int>()
             {
-                5, 1, 2, 3, 4, 5,1,2,3,4
+                5, 1, 2, 3, 4, 5, 1, 2, 3, 4
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
-            
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+
             rb.Reset();
             result.Clear();
             for (var i = 0; i < 10; i++)
             {
                 tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
             }
+
             await Task.WhenAll(tasks);
-            
+
             mustBe = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
-        
+
         [Test]
         public async Task RoundRobin_StartTo()
         {
@@ -190,12 +192,12 @@ namespace RoundRobin.Test
 
             var mustBe = new List<int>()
             {
-                5, 1, 2, 3, 4, 5,1,2,3,4
+                5, 1, 2, 3, 4, 5, 1, 2, 3, 4
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
-        
+
         [Test]
         public async Task RoundRobin()
         {
@@ -216,7 +218,163 @@ namespace RoundRobin.Test
                 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
             };
 
-            Assert.That(mustBe.OrderBy(i => i),Is.EqualTo(result.OrderBy(i => i)));
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+        }
+
+
+        [Test]
+        public async Task RoundRobinAddNewElementAtFirst()
+        {
+            var rb = new RoundRobinList<int>(_data);
+
+            var result = new ConcurrentBag<int>();
+            var tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+            result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 2, 3, 4, 5, 1, 2, 3, 4, 5
+            };
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+
+            rb.AddElementAtFirst(0, 1);
+
+            result.Clear();
+            tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+
+            mustBe = [0, 0, 1, 2, 3, 4, 5, 0, 0, 1];
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+        }
+        
+        
+        [Test]
+        public async Task RoundRobinAddNewElementBefore()
+        {
+            var rb = new RoundRobinList<int>(_data);
+
+            var result = new ConcurrentBag<int>();
+            var tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+            result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 2, 3, 4, 5, 1, 2, 3, 4, 5
+            };
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+
+            rb.AddElementBefore(1,0, 1);
+
+            result.Clear();
+            tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+
+            mustBe = [0, 0, 1, 2, 3, 4, 5, 0, 0, 1];
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+        }
+        
+        
+        [Test]
+        public async Task RoundRobinAddNewElementAtLast()
+        {
+            var rb = new RoundRobinList<int>(_data);
+
+            var result = new ConcurrentBag<int>();
+            var tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+            result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 2, 3, 4, 5, 1, 2, 3, 4, 5
+            };
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+
+            rb.AddElementAtLast(6, 1);
+
+            result.Clear();
+            tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+
+            mustBe = [6, 6, 1, 2, 3, 4, 5, 6, 6, 1];
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+        }
+        
+        
+        [Test]
+        public async Task RoundRobinAddNewElementAfter()
+        {
+            var rb = new RoundRobinList<int>(_data);
+
+            var result = new ConcurrentBag<int>();
+            var tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+            result.ToList().ForEach(z => { TestContext.Write($"{z},"); });
+
+            var mustBe = new List<int>()
+            {
+                1, 2, 3, 4, 5, 1, 2, 3, 4, 5
+            };
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
+
+            rb.AddElementAfter(5,6, 1);
+
+            result.Clear();
+            tasks = new Task[10];
+            for (var i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => { result.Add(rb.Next()); });
+            }
+
+            await Task.WhenAll(tasks);
+
+            mustBe = [6, 6, 1, 2, 3, 4, 5, 6, 6, 1];
+
+            Assert.That(mustBe.OrderBy(i => i), Is.EqualTo(result.OrderBy(i => i)));
         }
 
         [Test]
