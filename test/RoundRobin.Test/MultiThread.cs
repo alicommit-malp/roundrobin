@@ -46,7 +46,7 @@ namespace RoundRobin.Test
         [Test]
         public async Task InitialiseWithArrayOfWeights()
         {
-            var rb = new RoundRobinList<int>(_data, new[] { 0, 1, 0, 0, 0 });
+            var rb = new RoundRobinList<int>(_data, [0, 1, 0, 0, 0]);
 
             var result = new ConcurrentBag<int>();
             var tasks = new Task[10];
