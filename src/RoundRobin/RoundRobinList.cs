@@ -4,55 +4,142 @@ using System.Linq;
 
 namespace RoundRobin
 {
+    /// <summary>
+    /// Represents a Round Robin list data structure.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the list.</typeparam>
     public class RoundRobinList<T>
     {
         private readonly LinkedList<RoundRobinData<T>> _linkedList;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private LinkedListNode<RoundRobinData<T>> _current;
 
         /// <summary>
-        /// Construct the RoundRobin 
+        /// Represents a round-robin list.
         /// </summary>
-        /// <param name="list"></param>
-        /// <param name="weights">An array of weights</param>
-        /// <remarks><see cref="weights"/>'s lenght must be equal to the <see cref="list"/>'s count</remarks>
-        public RoundRobinList(IEnumerable<T> list,int[] weights=null)
+        public RoundRobinList(IEnumerable<T> list, int[] weights = null)
         {
-            _linkedList = new LinkedList<RoundRobinData<T>>(RoundRobinData<T>.ToRoundRobinData(list,weights));
+            _linkedList = new LinkedList<RoundRobinData<T>>(RoundRobinData<T>.ToRoundRobinData(list, _lock, weights));
         }
-        
+
         /// <summary>
-        /// Reset the Round Robin to point to the first object
-        /// ex: {1,2,3,4,5} then the first one is {1}
+        /// Reset the Round Robin to point to the first object.
         /// </summary>
-        public void Reset()
+        /// <param name="resetTheCounters">Indicates whether to reset the counters of the objects in the Round Robin. The default value is true.</param>
+        public void Reset(bool resetTheCounters = true)
         {
             lock (_lock)
             {
-                _current = _linkedList.First;
+                if (resetTheCounters)
+                {
+                    foreach (var roundRobinData in _linkedList)
+                    {
+                        roundRobinData.Counter = 0;
+                    }
+                }
+
+                _current = null;
             }
         }
 
         /// <summary>
-        /// Reset the Round Robin to point to <typeparamref name="T"/>
-        /// ex: {1,2,3,4,5} then the reset to 3 then when you call the next 4 will be the first value which will be yield 
+        /// Adds a new element at the last position in the Round Robin list.
         /// </summary>
+        /// <param name="newElement">The element to be added to the list.</param>
+        /// <param name="weight">The weight associated with the new element. The default value is Constants.WeightDefaultValue.</param>
+        public void AddElementAtLast(T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddLast(new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds a new element to the beginning of the Round Robin list.
+        /// </summary>
+        /// <param name="newElement">The new element to add.</param>
+        /// <param name="weight">The weight of the new element. The default value is Constants.WeightDefaultValue.</param>
+        public void AddElementAtFirst(T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddFirst(new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// Adds a new element before the specified element in the Round Robin list.
+        /// </summary>
+        /// <param name="beforeElement">The element before which the new element will be added.</param>
+        /// <param name="newElement">The new element to be added.</param>
+        /// <param name="weight">The weight of the new element. Defaults to Constants.WeightDefaultValue if not provided.</param>
+        /// <remarks>
+        /// This method adds the new element before the specified element in the Round Robin list.
+        /// It locks the list using a lock object to ensure thread safety.
+        /// If the specified element is not found in the list, an InvalidOperationException is thrown.
+        /// </remarks>
+        public void AddElementBefore(T beforeElement,T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddBefore(_linkedList.Find(_linkedList.First(z=>
+                    z.Element.Equals(beforeElement))) ?? throw new InvalidOperationException(),new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds a new element after a specified element in the RoundRobinList.
+        /// </summary>
+        /// <param name="afterElement">The element after which the new element should be added.</param>
+        /// <param name="newElement">The new element to be added.</param>
+        /// <param name="weight">The weight of the new element. The default value is Constants.WeightDefaultValue.</param>
+        public void AddElementAfter(T afterElement, T newElement, int weight = Constants.WeightDefaultValue)
+        {
+            lock (_lock)
+            {
+                _linkedList.AddAfter(_linkedList.Find(_linkedList.First(z =>
+                    z.Element.Equals(afterElement))) ?? throw new InvalidOperationException(), new RoundRobinData<T>()
+                {
+                    Element = newElement,
+                    Weight = weight,
+                    Counter = Constants.CounterDefaultValue
+                });
+            }
+        }
+        
+        /// <summary>
+        /// Reset the Round Robin to point to a specific element.
+        /// </summary>
+        /// <param name="element">The element to reset the Round Robin to.</param>
         public void ResetTo(T element)
         {
             lock (_lock)
             {
-                foreach (var roundRobinData in _linkedList.Where(roundRobinData =>
-                    roundRobinData.Element.Equals(element)))
-                {
-                    _current = _linkedList.Find(roundRobinData);
-                }
+                _current = _linkedList.Find(_linkedList.FirstOrDefault(x => x.Element.Equals(element)));
             }
         }
 
         /// <summary>
-        /// Reset all the weights to a value 
+        /// Reset all the weights to a specified value or the default value.
         /// </summary>
-        /// <param name="value">if not passed the default value will be applied</param>
+        /// <param name="value">The value to reset all the weights to. If not passed, the default value will be applied.</param>
         public void ResetAllWeights(int value = Constants.WeightDefaultValue)
         {
             lock (_lock)
@@ -65,11 +152,11 @@ namespace RoundRobin
         }
 
         /// <summary>
-        /// Reset the weight value of a single element 
+        /// Resets the weight value of a single element in the Round Robin list.
         /// </summary>
-        /// <param name="item">The element that you wish to change the weight for it</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public void ResetWeight(T item)
+        /// <param name="item">The element that you wish to change the weight for.</param>
+        /// <param name="value">The new weight value.</param>
+        public void ResetWeight(T item, int value = Constants.WeightDefaultValue)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
@@ -77,27 +164,26 @@ namespace RoundRobin
             {
                 foreach (var roundRobinData in _linkedList.Where(roundRobinData => roundRobinData.Element.Equals(item)))
                 {
-                    roundRobinData.Weight = Constants.WeightDefaultValue;
+                    roundRobinData.Weight = value;
                 }
             }
         }
 
         /// <summary>
-        /// Decrease the value of the weight associating with the Round Robin's element 
+        /// Decrease the value of the weight associating with the Round Robin's element
         /// </summary>
-        /// <param name="element">The round robin element</param>
-        /// <param name="amount">The amount of the change , default value is 1</param>
+        /// <param name="element">The round-robin element</param>
+        /// <param name="amount">The amount of the change, default value is 1</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         public void DecreaseWeight(T element, int amount = 1)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
-            if (amount < 1) throw new ArgumentException($"{nameof(amount)} must be greater than 1");
+            if (amount < 1) throw new ArgumentException($"{nameof(amount)} must be >= 1");
 
             lock (_lock)
             {
                 foreach (var roundRobinData in _linkedList.Where(roundRobinData =>
-                    roundRobinData.Element.Equals(element)))
+                             roundRobinData.Element.Equals(element)))
                 {
                     var futureWeight = roundRobinData.Weight - amount;
                     roundRobinData.Weight = futureWeight < Constants.WeightDefaultValue
@@ -108,21 +194,20 @@ namespace RoundRobin
         }
 
         /// <summary>
-        /// Increase the value of the weight associating with the Round Robin's element 
+        /// Increase the value of the weight associating with the Round Robin's element.
         /// </summary>
-        /// <param name="element">The round robin element</param>
-        /// <param name="amount">The amount of the change , default value is 1</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="element">The roundrobin element.</param>
+        /// <param name="amount">The amount of the change, default value is 1.</param>
+        /// <exception cref="ArgumentException">Thrown when amount is less than 1.</exception>
         public void IncreaseWeight(T element, int amount = 1)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
-            if (amount < 1) throw new ArgumentException("Amount must be greater than 1");
+            if (amount < 1) throw new ArgumentException($"{nameof(amount)} must be >= 1");
 
             lock (_lock)
             {
                 foreach (var roundRobinData in _linkedList.Where(roundRobinData =>
-                    roundRobinData.Element.Equals(element)))
+                             roundRobinData.Element.Equals(element)))
                 {
                     roundRobinData.Weight += amount;
                 }
@@ -130,34 +215,43 @@ namespace RoundRobin
         }
 
         /// <summary>
-        /// Get the next value in list
+        /// Get the next value in the round-robin list.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The next value in the list.</returns>
         public T Next()
         {
             lock (_lock)
             {
-                if (_linkedList.Count == 0)
-                    throw new InvalidOperationException("List is empty.");
-
-                if (_current == null) _current = _linkedList.First;
-                else
-                {
-                    if (!_current.Value.MustMoveToNext()) return _current.Value.Element;
-
-                    _current.Value.Counter = Constants.CounterDefaultValue;
-                    _current = _current.NextOrFirst();
-                }
-
-                return _current.Value.Element;
+                return NextNoLock();
             }
+        }
+
+        /// <summary>
+        /// Retrieves the next element in the Round Robin list without acquiring a lock.
+        /// </summary>
+        /// <returns>The next element in the Round Robin list.</returns>
+        private T NextNoLock()
+        {
+            if (_linkedList.Count == 0)
+                throw new InvalidOperationException("List is empty.");
+
+            if (_current == null) _current = _linkedList.First;
+            else
+            {
+                if (!_current.Value.MustMoveToNext()) return _current.Value.Element;
+
+                _current.Value.Counter = Constants.CounterDefaultValue;
+                _current = _current.NextOrFirst();
+            }
+
+            return _current!.Value.Element;
         }
 
         /// <summary>
         /// Get the next n values in the list
         /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
+        /// <param name="count">The number of elements to get from the list.</param>
+        /// <returns>An IEnumerable containing the next n values in the list.</returns>
         public IEnumerable<T> Nexts(int count)
         {
             if (count < 1) throw new ArgumentException($"{nameof(count)} must be greater than 1");
@@ -167,7 +261,7 @@ namespace RoundRobin
             {
                 for (var i = 0; i < count; i++)
                 {
-                    result.Add(Next());
+                    result.Add(NextNoLock());
                 }
             }
 
