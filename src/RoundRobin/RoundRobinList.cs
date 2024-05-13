@@ -17,7 +17,6 @@ namespace RoundRobin
         /// <summary>
         /// Represents a round-robin list.
         /// </summary>
-        /// <typeparam name="T">The type of elements in the list.</typeparam>
         public RoundRobinList(IEnumerable<T> list, int[] weights = null)
         {
             _linkedList = new LinkedList<RoundRobinData<T>>(RoundRobinData<T>.ToRoundRobinData(list, _lock, weights));

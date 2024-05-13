@@ -1,19 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;netcoreapp3.1;netstandard2.1;net481</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>A Thread-Safe Round Robin implmentation</Description>
+    <Description>This Package provides Round Robin algorithm that is thread safe, It can be used for load balancing </Description>
     <Copyright>None</Copyright>
     <PackageProjectUrl>https://github.com/alicommit-malp/roundrobin</PackageProjectUrl>
     <RepositoryUrl>https://github.com/alicommit-malp/roundrobin</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
-    <PackageTags>RoundRobin, Thread-Safe</PackageTags>
-    <Title>Thread-Safe Round Robin</Title>
+    <PackageTags>Round Robin,Roundrobin, Thread Safe,thread-safe,Load balancing</PackageTags>
+    <Title>Round Robin (thread safe)</Title>
     <license>MIT</license>
     <PackageVersion>3.0.0</PackageVersion>
     <LicenseUrl>https://raw.githubusercontent.com/alicommit-malp/roundrobin/master/LICENSE</LicenseUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\RoundRobin.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

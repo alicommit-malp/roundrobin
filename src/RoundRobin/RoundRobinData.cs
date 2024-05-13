@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +12,6 @@ namespace RoundRobin
         /// <summary>
         /// Represents a data element used in the RoundRobinList class.
         /// </summary>
-        /// <typeparam name="T">The type of the element.</typeparam>
         public T Element { get; set; }
 
         /// <summary>
@@ -33,7 +31,6 @@ namespace RoundRobin
     /// <summary>
     /// Represents a data element used in the RoundRobinList class.
     /// </summary>
-    /// <typeparam name="T">The type of the element.</typeparam>
     internal partial class RoundRobinData<T>
     {
         /// <summary>
@@ -49,7 +46,6 @@ namespace RoundRobin
         /// <summary>
         /// Converts a collection of elements to a collection of RoundRobinData objects.
         /// </summary>
-        /// <typeparam name="T">The type of the elements.</typeparam>
         /// <param name="list">The list of elements to create the RoundRobinData collection from.</param>
         /// <param name="lock">The object to lock while creating the collection.</param>
         /// <param name="weights">An optional array of weights for each element in the list. If not provided, the default weight value will be used.</param>
