@@ -12,7 +12,7 @@
     <PackageTags>Round Robin,Roundrobin, Thread Safe,thread-safe,Load balancing</PackageTags>
     <Title>Round Robin (thread safe)</Title>
     <license>MIT</license>
-    <PackageVersion>3.0.0</PackageVersion>
+    <PackageVersion>2.3.0</PackageVersion>
     <LicenseUrl>https://raw.githubusercontent.com/alicommit-malp/roundrobin/master/LICENSE</LicenseUrl>
   </PropertyGroup>
 
