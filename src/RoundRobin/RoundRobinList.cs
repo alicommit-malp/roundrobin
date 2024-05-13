@@ -172,10 +172,9 @@ namespace RoundRobin
         /// <summary>
         /// Decrease the value of the weight associating with the Round Robin's element
         /// </summary>
-        /// <param name="element">The round robin element</param>
-        /// <param name="amount">The amount of the change , default value is 1</param>
+        /// <param name="element">The round-robin element</param>
+        /// <param name="amount">The amount of the change, default value is 1</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         public void DecreaseWeight(T element, int amount = 1)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
@@ -197,9 +196,8 @@ namespace RoundRobin
         /// <summary>
         /// Increase the value of the weight associating with the Round Robin's element.
         /// </summary>
-        /// <param name="element">The round robin element.</param>
+        /// <param name="element">The roundrobin element.</param>
         /// <param name="amount">The amount of the change, default value is 1.</param>
-        /// <exception cref="ArgumentNullException">Thrown when element is null.</exception>
         /// <exception cref="ArgumentException">Thrown when amount is less than 1.</exception>
         public void IncreaseWeight(T element, int amount = 1)
         {
