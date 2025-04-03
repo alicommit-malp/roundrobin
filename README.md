@@ -1,5 +1,9 @@
 # A thread safe Round Robin implementation in C#
 
+
+![RoundRobin in C#](https://github.com/user-attachments/assets/03de43e1-ff09-4158-9427-6454390c5704)
+
+
 [Round Robin](https://en.wikipedia.org/wiki/Round-robin_scheduling) is a very simple but in the same time very useful algorithm,
 but there is no native implementation in C#. So here is a simple but powerful and thread-safe implementation of the Round Robin algorithm in C\#.
 
