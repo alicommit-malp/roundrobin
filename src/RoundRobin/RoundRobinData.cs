@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,7 +56,20 @@ namespace RoundRobin
         {
             lock (@lock)
             {
-                var result = list
+                var materializedList = list.ToList();
+
+                if (weights != null)
+                {
+                    if (weights.Length != materializedList.Count)
+                        throw new ArgumentException(
+                            $"Weights array length ({weights.Length}) must match the number of elements ({materializedList.Count}).",
+                            nameof(weights));
+
+                    if (weights.Any(w => w < 0))
+                        throw new ArgumentException("Weights must not be negative.", nameof(weights));
+                }
+
+                var result = materializedList
                     .Select((item, index) => new RoundRobinData<T>()
                     {
                         Element = item, Counter = Constants.CounterDefaultValue,

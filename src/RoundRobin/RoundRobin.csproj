@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;netcoreapp3.1;netstandard2.1;net481</TargetFrameworks>
+    <TargetFrameworks>net8.0;netstandard2.1;net481</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>This Package provides Round Robin algorithm that is thread safe, It can be used for load balancing </Description>
@@ -12,7 +12,7 @@
     <PackageTags>Round Robin,Roundrobin, Thread Safe,thread-safe,Load balancing</PackageTags>
     <Title>Round Robin (thread safe)</Title>
     <license>MIT</license>
-    <PackageVersion>2.3.0</PackageVersion>
+    <PackageVersion>2.4.0</PackageVersion>
     <LicenseUrl>https://raw.githubusercontent.com/alicommit-malp/roundrobin/master/LICENSE</LicenseUrl>
   </PropertyGroup>
 

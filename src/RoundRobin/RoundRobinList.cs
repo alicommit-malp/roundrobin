@@ -125,6 +125,48 @@ namespace RoundRobin
         }
         
         /// <summary>
+        /// Gets the number of elements in the Round Robin list.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _linkedList.Count;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the specified element from the Round Robin list.
+        /// </summary>
+        /// <param name="element">The element to remove.</param>
+        /// <returns>true if the element was found and removed; otherwise, false.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the list contains only one element.</exception>
+        public bool RemoveElement(T element)
+        {
+            lock (_lock)
+            {
+                var data = _linkedList.FirstOrDefault(x => x.Element.Equals(element));
+                if (data == null) return false;
+
+                var node = _linkedList.Find(data);
+                if (_linkedList.Count == 1)
+                    throw new InvalidOperationException("Cannot remove the last remaining element.");
+
+                if (_current == node)
+                {
+                    _current = node.PreviousOrLast();
+                    if (_current == node) _current = null;
+                }
+
+                _linkedList.Remove(node!);
+                return true;
+            }
+        }
+
+        /// <summary>
         /// Reset the Round Robin to point to a specific element.
         /// </summary>
         /// <param name="element">The element to reset the Round Robin to.</param>
@@ -132,7 +174,9 @@ namespace RoundRobin
         {
             lock (_lock)
             {
-                _current = _linkedList.Find(_linkedList.FirstOrDefault(x => x.Element.Equals(element)));
+                var data = _linkedList.FirstOrDefault(x => x.Element.Equals(element))
+                           ?? throw new InvalidOperationException($"Element not found in the list.");
+                _current = _linkedList.Find(data);
             }
         }
 
@@ -254,7 +298,7 @@ namespace RoundRobin
         /// <returns>An IEnumerable containing the next n values in the list.</returns>
         public IEnumerable<T> Nexts(int count)
         {
-            if (count < 1) throw new ArgumentException($"{nameof(count)} must be greater than 1");
+            if (count < 1) throw new ArgumentException($"{nameof(count)} must be >= 1");
 
             var result = new List<T>();
             lock (_lock)

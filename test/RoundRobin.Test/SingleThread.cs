@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 
 namespace RoundRobin.Test
@@ -20,8 +19,6 @@ namespace RoundRobin.Test
             {
                 results.Add(runnable.Next());
             }
-
-            results.ToList().ForEach(z => { TestContext.Write($"{z},"); });
         }
 
         private static void AssertResults(List<int> expected, List<int> actual)
@@ -278,7 +275,6 @@ namespace RoundRobin.Test
             var result = new List<int>();
             result.AddRange(rb.Nexts(5));
             result.AddRange(rb.Nexts(5));
-            result.ForEach(z => { TestContext.Write($"{z},"); });
             Assert.That(new List<int>()
             {
                 1, 2, 3, 4, 5, 1, 2, 3, 4, 5
