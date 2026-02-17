@@ -14,7 +14,12 @@
     <license>MIT</license>
     <PackageVersion>2.4.0</PackageVersion>
     <LicenseUrl>https://raw.githubusercontent.com/alicommit-malp/roundrobin/master/LICENSE</LicenseUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DocumentationFile>bin\Debug\RoundRobin.xml</DocumentationFile>

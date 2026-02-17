@@ -5,8 +5,11 @@ on:
     branches: [master]
 
 jobs:
-  publish:
+  build-and-test:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      should-publish: ${{ steps.check-nuget.outputs.should-publish }}
     steps:
       - uses: actions/checkout@v4
 
@@ -24,8 +27,50 @@ jobs:
       - name: Test
         run: dotnet test --configuration Release --no-build
 
+      - name: Get package version
+        id: get-version
+        run: |
+          VERSION=$(grep '<PackageVersion>' src/RoundRobin/RoundRobin.csproj | sed 's/.*<PackageVersion>\(.*\)<\/PackageVersion>.*/\1/')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check if version exists on NuGet
+        id: check-nuget
+        run: |
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://api.nuget.org/v3-flatcontainer/roundrobin/${{ steps.get-version.outputs.version }}/roundrobin.nuspec")
+          if [ "$STATUS_CODE" = "200" ]; then
+            echo "Version ${{ steps.get-version.outputs.version }} already exists on NuGet. Skipping publish."
+            echo "should-publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version ${{ steps.get-version.outputs.version }} not found on NuGet. Will publish."
+            echo "should-publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Pack
+        if: steps.check-nuget.outputs.should-publish == 'true'
         run: dotnet pack src/RoundRobin/RoundRobin.csproj --configuration Release --no-build --output ./nupkg
 
+      - name: Upload package
+        if: steps.check-nuget.outputs.should-publish == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: ./nupkg/*.nupkg
+
+  publish:
+    needs: build-and-test
+    if: needs.build-and-test.outputs.should-publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download package
+        uses: actions/download-artifact@v4
+        with:
+          name: nupkg
+          path: ./nupkg
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
       - name: Publish to NuGet
-        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
